@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Travel Guide - Complete</title>
+    
+    <style>
+        /* Modern React-like Design CSS */
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #17a2b8;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, 20px);
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(102, 126, 234, 0.6) 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="white" opacity="0.1"/><circle cx="80" cy="80" r="3" fill="white" opacity="0.1"/><circle cx="80" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="20" cy="80" r="2" fill="white" opacity="0.1"/></svg>');
+            opacity: 0.3;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+            animation: slideDown 0.8s ease-out 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(102, 126, 234, 0.5) 100%);
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        nav a:hover {
+            color: #667eea;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        nav a:hover::before {
+            left: 0;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        section {
+            margin: 40px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        section p {
+            color: var(--text-light);
+            margin: 15px 0;
+            font-weight: 400;
+            line-height: 1.8;
+        }
+
+        /* Map Container */
+        .map-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eef7 100%);
+            border-radius: 10px;
+        }
+
+        .map-container img {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            cursor: crosshair;
+        }
+
+        .map-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Hotspot Info */
+        .hotspot-info {
+            display: none;
+            position: fixed;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10000;
+            max-width: 300px;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            animation: popIn 0.3s ease;
+        }
+
+        .hotspot-info.active {
+            display: block;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hotspot-info h3 {
+            margin-top: 0;
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .hotspot-info p {
+            color: rgba(255, 255, 255, 0.95);
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Map Legend */
+        .map-legend {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #f8f0ff 100%);
+            border-radius: 10px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .map-legend h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .legend-item {
+            margin: 10px 0;
+            padding: 8px 12px;
+            font-size: 0.95em;
+            color: var(--text-light);
+            border-left: 3px solid var(--primary-color);
+            padding-left: 15px;
+            transition: var(--transition);
+        }
+
+        .legend-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            padding-left: 20px;
+        }
+
+        .legend-item::before {
+            content: '▸ ';
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .content-section:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .content-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
+        }
+
+        .content-section a {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section a:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* IFrame Container */
+        .iframe-container {
+            margin: 30px 0;
+            border: 3px solid var(--primary-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            background: #f8f9fa;
+        }
+
+        .iframe-container:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            display: block;
+            background: white;
+        }
+
+        /* Highlight Section */
+        .highlight {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe5b4 100%);
+            border-left: 5px solid #ff6b00;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .highlight strong {
+            color: #ff6b00;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(102, 126, 234, 0.7) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            margin: 8px 0;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header p {
+                font-size: 1em;
+            }
+
+            section {
+                padding: 20px;
+                margin: 25px 0;
+            }
+
+            section h2 {
+                font-size: 1.5em;
+            }
+
+            nav {
+                gap: 5px;
+            }
+
+            nav a {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+
+            .map-container img {
+                border-width: 2px;
+            }
+
+            iframe {
+                height: 400px;
+            }
+
+            .hotspot-info {
+                max-width: 250px;
+                padding: 15px;
+            }
+        }
+
+        /* About Page Styles */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .page-header h1 {
+            color: white;
+            border-bottom: 3px solid white;
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+            font-weight: 300;
+        }
+
+        .category {
+            background: white;
+            padding: 30px;
+            margin: 25px 0;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            cursor: pointer;
+            transform: translateY(0);
+        }
+
+        .category:hover {
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-5px);
+            border-left-color: var(--secondary-color);
+        }
+
+        .category.expanded {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eef7 100%);
+        }
+
+        .destinations-list {
+            margin-left: 20px;
+            margin-top: 15px;
+            list-style: none;
+        }
+
+        .destinations-list li {
+            margin: 12px 0;
+            line-height: 1.8;
+            padding-left: 25px;
+            position: relative;
+            transition: var(--transition);
+            color: #555;
+        }
+
+        .destinations-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .destinations-list li:hover {
+            color: var(--primary-color);
+            padding-left: 35px;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: none;
+            z-index: 1000;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        }
+
+        .back-to-top.show {
+            display: block;
+        }
+
+        .destination-tooltip {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>🌍 Interactive Travel Guide Explorer</h1>
+        <p>Explore destinations with interactive hotspots and travel information</p>
+    </header>
+    
+    <!-- Navigation -->
+    <nav>
+        <a href="#map-section">Map</a>
+        <a href="#hotspots-section">Destinations</a>
+        <a href="#resources-section">Resources</a>
+        <a href="#travel-guide">Travel Guide</a>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Map Section -->
+        <section id="map-section">
+            <h2>🗺️ Interactive World Map with Hotspots</h2>
+            <p style="color: #666; font-style: italic;">Click on the different regions of the map to explore destinations</p>
+            
+            <div class="map-container">
+                <!-- Sample world map image with hotspots -->
+                <img src="data:image/jpeg;base64,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""
+                     id="worldMap" 
+                     usemap="#worldmap" 
+                     style="border: 3px solid var(--primary-color); max-width: 100%; height: auto;">
+                
+                <!-- Image Map with Hotspots -->
+                <map name="worldmap">
+                    <!-- Europe Hotspot -->
+                    <area shape="rect" coords="300,150,450,250" alt="Europe" 
+                          href="javascript:showHotspot('Europe', 'Europe is a continent rich in culture, history, and diverse landscapes. Home to world-class museums, historic castles, and vibrant cities.')" 
+                          title="Click to explore Europe">
+                    
+                    <!-- Asia Hotspot -->
+                    <area shape="rect" coords="450,120,700,280" alt="Asia" 
+                          href="javascript:showHotspot('Asia', 'Asia is the world\'s largest continent featuring ancient temples, futuristic cities, and diverse cultures spanning from Japan to India.')" 
+                          title="Click to explore Asia">
+                    
+                    <!-- Africa Hotspot -->
+                    <area shape="rect" coords="350,280,550,450" alt="Africa" 
+                          href="javascript:showHotspot('Africa', 'Africa is home to incredible wildlife, vast savannas, desert landscapes, and ancient civilizations with rich cultural heritage.')" 
+                          title="Click to explore Africa">
+                    
+                    <!-- Americas Hotspot -->
+                    <area shape="rect" coords="100,150,300,400" alt="Americas" 
+                          href="javascript:showHotspot('Americas', 'The Americas offer diverse experiences from tropical rainforests and ancient ruins to modern metropolises and stunning natural wonders.')" 
+                          title="Click to explore Americas">
+                    
+                    <!-- Oceania Hotspot -->
+                    <area shape="circle" coords="700,400,40" alt="Oceania" 
+                          href="javascript:showHotspot('Oceania', 'Oceania includes Australia, New Zealand, and thousands of Pacific islands known for unique wildlife and pristine beaches.')" 
+                          title="Click to explore Oceania">
+                </map>
+            </div>
+            
+            <!-- Hotspot Information Display -->
+            <div class="hotspot-info" id="hotspotInfo">
+                <h3 id="hotspotTitle">Destination</h3>
+                <p id="hotspotDescription">Click on a region to learn more</p>
+            </div>
+            
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <h3 style="margin-top: 0;">Map Regions</h3>
+                <div class="legend-item">Europe - Culture and History</div>
+                <div class="legend-item">Asia - Diversity and Innovation</div>
+                <div class="legend-item">Africa - Wildlife and Heritage</div>
+                <div class="legend-item">Americas - Adventure and Discovery</div>
+                <div class="legend-item">Oceania - Unique Ecosystems</div>
+            </div>
+        </section>
+        
+        <!-- Hotspots Information Section -->
+        <section id="hotspots-section">
+            <h2>📍 Featured Destinations</h2>
+            
+            <div class="content-section" style="background-color: #e8f4f8; border-left: 4px solid #17a2b8;">
+                <h3 style="color: #17a2b8;">Paris, France</h3>
+                <p>Home to iconic landmarks, world-class museums, and historic architecture. Paris offers an excellent experience for travelers interested in culture and history.</p>
+                <a href="#" style="color: #17a2b8; text-decoration: none; font-weight: bold;">Learn more</a>
+            </div>
+            
+            <div class="content-section" style="background-color: #f0e8f4; border-left: 4px solid #6f42c1;">
+                <h3 style="color: #6f42c1;">Tokyo, Japan</h3>
+                <p>A vibrant city combining traditional architecture with modern development. Known for unique food culture, shopping districts, and distinctive neighborhoods.</p>
+                <a href="#" style="color: #6f42c1; text-decoration: none; font-weight: bold;">Learn more</a>
+            </div>
+            
+            <div class="content-section" style="background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                <h3 style="color: #ff6b00;">Safari, Kenya</h3>
+                <p>Experience wildlife in natural habitats across expansive national parks. Great for photography and observing animals in their native environment.</p>
+                <a href="#" style="color: #ff6b00; text-decoration: none; font-weight: bold;">Learn more</a>
+            </div>
+            
+            <div class="content-section" style="background-color: #e8f5e9; border-left: 4px solid #28a745;">
+                <h3 style="color: #28a745;">New York, USA</h3>
+                <p>A major metropolitan area offering diverse attractions, museums, theaters, and dining options. Well-known for its urban landscape and diverse population.</p>
+                <a href="#" style="color: #28a745; text-decoration: none; font-weight: bold;">Learn more</a>
+            </div>
+        </section>
+        
+        <!-- Travel Guide Section -->
+        <section id="travel-guide">
+            <div class="page-header">
+                <h2 style="color: white; text-align: center; border: none; padding: 0; margin: 0;">🌍 Complete Travel Destination Guide</h2>
+                <p style="color: rgba(255, 255, 255, 0.9); text-align: center; margin-top: 10px;">Explore the world's most amazing destinations</p>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="category" data-category="cultural">
+                    <h2>🏛️ Cultural Destinations</h2>
+                    <p>Immerse yourself in the rich history and culture of ancient civilizations and modern metropolises.</p>
+                    <ul class="destinations-list">
+                        <li data-dest="rome"><strong>Rome, Italy:</strong> Explore ancient ruins, Renaissance art, and world-class cuisine</li>
+                        <li data-dest="athens"><strong>Athens, Greece:</strong> Visit the birthplace of democracy and ancient Greek civilization</li>
+                        <li data-dest="beijing"><strong>Beijing, China:</strong> Experience the Great Wall, Forbidden City, and traditional culture</li>
+                        <li data-dest="cairo"><strong>Cairo, Egypt:</strong> Marvel at the Pyramids and explore pharaonic history</li>
+                    </ul>
+                </div>
+                
+                <div class="category" data-category="beach">
+                    <h2>🏖️ Beach & Nature Destinations</h2>
+                    <p>Relax on pristine beaches and explore breathtaking natural wonders.</p>
+                    <ul class="destinations-list">
+                        <li data-dest="bali"><strong>Bali, Indonesia:</strong> Tropical paradise with beaches, temples, and rice terraces</li>
+                        <li data-dest="maldives"><strong>Maldives:</strong> Luxury resorts and crystal-clear waters perfect for diving</li>
+                        <li data-dest="patagonia"><strong>Patagonia, Argentina:</strong> Stunning mountain landscapes and glacier trekking</li>
+                        <li data-dest="costarica"><strong>Costa Rica:</strong> Cloud forests, wildlife, and eco-tourism adventures</li>
+                    </ul>
+                </div>
+                
+                <div class="category" data-category="modern">
+                    <h2>🌃 Modern City Destinations</h2>
+                    <p>Discover vibrant urban centers with incredible architecture, dining, and entertainment.</p>
+                    <ul class="destinations-list">
+                        <li data-dest="newyork"><strong>New York, USA:</strong> The city that never sleeps with Broadway and iconic landmarks</li>
+                        <li data-dest="dubai"><strong>Dubai, UAE:</strong> Futuristic skyline, luxury shopping, and desert adventures</li>
+                        <li data-dest="singapore"><strong>Singapore:</strong> Modern metropolis with diverse cultures and exceptional food</li>
+                        <li data-dest="barcelona"><strong>Barcelona, Spain:</strong> Architecture by Gaudí, beaches, and vibrant nightlife</li>
+                    </ul>
+                </div>
+                
+                <div class="category" data-category="adventure">
+                    <h2>⛰️ Adventure & Outdoor Destinations</h2>
+                    <p>Challenge yourself with exciting outdoor activities and extreme adventures.</p>
+                    <ul class="destinations-list">
+                        <li data-dest="nepal"><strong>Nepal:</strong> Trekking in the Himalayas and Mount Everest base camp</li>
+                        <li data-dest="switzerland"><strong>Switzerland:</strong> Skiing, hiking, and picturesque mountain villages</li>
+                        <li data-dest="newzealand"><strong>New Zealand:</strong> Adventure sports capital with stunning landscapes</li>
+                        <li data-dest="iceland"><strong>Iceland:</strong> Waterfalls, geysers, and the Northern Lights</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight" style="background: linear-gradient(135deg, #e8f4f8 0%, #d4ecf4 100%); border-left-color: #17a2b8;">
+                    <strong style="color: #17a2b8;">✈️ Travel Tips:</strong> Always check visa requirements, weather conditions, and local customs before traveling. Book accommodations in advance during peak seasons, and don't forget travel insurance for peace of mind!
+                </div>
+                
+                <div class="category" data-category="checklist">
+                    <h2>📋 Travel Checklist</h2>
+                    <ul class="destinations-list">
+                        <li><strong>Passport:</strong> Valid passport (at least 6 months validity)</li>
+                        <li><strong>Insurance:</strong> Travel insurance coverage</li>
+                        <li><strong>Bookings:</strong> Flight and accommodation bookings</li>
+                        <li><strong>Planning:</strong> Travel itinerary and maps</li>
+                        <li><strong>Money:</strong> Currency exchange and ATM information</li>
+                        <li><strong>Packing:</strong> Packing list for the climate</li>
+                        <li><strong>Emergency:</strong> Emergency contacts and embassy information</li>
+                    </ul>
+                </div>
+                
+                <p style="margin-top: 40px; text-align: center; color: #aaa; font-size: 0.95em;">
+                    <em>Last updated: January 2026 | Complete Interactive Travel Guide</em>
+                </p>
+            </div>
+        </section>
+        
+        <!-- Resources Section -->
+        <section id="resources-section">
+            <h2>📚 Travel Resources & Links</h2>
+            
+            <h3 style="color: var(--primary-color); margin-top: 20px;">Useful Travel Links:</h3>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><a href="https://www.booking.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">Booking.com - Hotel Reservations</a></li>
+                <li><a href="https://www.airbnb.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">Airbnb - Unique Accommodations</a></li>
+                <li><a href="https://www.tripadvisor.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">TripAdvisor - Reviews & Tips</a></li>
+                <li><a href="https://www.google.com/maps" target="_blank" style="color: var(--primary-color); text-decoration: none;">Google Maps - Navigation</a></li>
+                <li><a href="https://www.britannica.com" target="_blank" style="color: var(--primary-color); text-decoration: none;">Britannica - Destination Information</a></li>
+            </ul>
+            
+            <div class="highlight">
+                <strong>Note:</strong> Click on any region in the map above to learn about specific destinations. Hover over destinations to see detailed information. Double-click on travel guide items for modals.
+            </div>
+        </section>
+    </main>
+    
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">↑</button>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Interactive Travel Guide - All in One Complete Version</p>
+        <p>Created with HTML5, CSS3, and Interactive Vanilla JavaScript</p>
+    </footer>
+
+    <script>
+        // ====== ENHANCED INTERACTIVE FEATURES ======
+
+        let mouseX = 0, mouseY = 0;
+        let hotspotInfoActive = false;
+
+        // 1. Track mouse position for tooltips
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // 2. Enhanced Hotspot Display Function
+        function showHotspot(title, description) {
+            const hotspotInfo = document.getElementById('hotspotInfo');
+            document.getElementById('hotspotTitle').textContent = title;
+            document.getElementById('hotspotDescription').textContent = description;
+            
+            // Add animation class
+            hotspotInfo.classList.add('active');
+            hotspotInfoActive = true;
+            
+            // Position following cursor
+            const moveInfoBox = function(e) {
+                if (hotspotInfoActive) {
+                    hotspotInfo.style.left = (e.clientX + 15) + 'px';
+                    hotspotInfo.style.top = (e.clientY + 15) + 'px';
+                }
+            };
+            
+            document.addEventListener('mousemove', moveInfoBox);
+            
+            // Auto-hide after 6 seconds
+            setTimeout(function() {
+                hotspotInfo.classList.remove('active');
+                hotspotInfoActive = false;
+                document.removeEventListener('mousemove', moveInfoBox);
+            }, 6000);
+
+            // Load region data via simulated AJAX
+            loadRegionData(title);
+        }
+
+        // 3. Simulated AJAX data loading for regions
+        function loadRegionData(region) {
+            const regionData = {
+                'Europe': {
+                    capital: 'Various (Brussels for EU)',
+                    population: '~750 million',
+                    area: '~10.2 million km²',
+                    bestTime: 'May-September',
+                    topDestinations: 'Paris, Rome, Barcelona, Vienna'
+                },
+                'Asia': {
+                    capital: 'Various',
+                    population: '~4.7 billion',
+                    area: '~44.6 million km²',
+                    bestTime: 'October-April',
+                    topDestinations: 'Tokyo, Bangkok, Dubai, Singapore'
+                },
+                'Africa': {
+                    capital: 'Various',
+                    population: '~1.4 billion',
+                    area: '~30.4 million km²',
+                    bestTime: 'June-August',
+                    topDestinations: 'Cairo, Cape Town, Marrakech, Nairobi'
+                },
+                'Americas': {
+                    capital: 'Various',
+                    population: '~1.05 billion',
+                    area: '~42.5 million km²',
+                    bestTime: 'Varies by region',
+                    topDestinations: 'New York, Rio, Mexico City, Vancouver'
+                },
+                'Oceania': {
+                    capital: 'Various',
+                    population: '~45 million',
+                    area: '~8.6 million km²',
+                    bestTime: 'December-February',
+                    topDestinations: 'Sydney, Auckland, Fiji, Bali'
+                }
+            };
+
+            if (regionData[region]) {
+                const data = regionData[region];
+                console.log(`📍 Loading data for ${region}...`);
+                console.log(`   Population: ${data.population}`);
+                console.log(`   Best time: ${data.bestTime}`);
+                console.log(`   Top destinations: ${data.topDestinations}`);
+            }
+        }
+
+        // 4. Close hotspot info on click elsewhere
+        document.addEventListener('click', function(e) {
+            const hotspotInfo = document.getElementById('hotspotInfo');
+            if (e.target.tagName !== 'AREA' && e.target !== hotspotInfo) {
+                hotspotInfo.classList.remove('active');
+                hotspotInfoActive = false;
+            }
+        });
+
+        // 5. Back to top button functionality
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 6. Category hover and click effects
+        const categories = document.querySelectorAll('.category');
+        categories.forEach((category, index) => {
+            category.style.animationDelay = `${index * 0.1}s`;
+            category.style.animation = 'slideDown 0.8s ease-out forwards';
+
+            // Mouse enter - add shadow and scale
+            category.addEventListener('mouseenter', (e) => {
+                category.style.boxShadow = '0 12px 35px rgba(102, 126, 234, 0.5)';
+            });
+
+            // Mouse leave - restore shadow
+            category.addEventListener('mouseleave', () => {
+                category.style.boxShadow = 'var(--shadow-lg)';
+            });
+
+            // Click to toggle expanded state
+            category.addEventListener('click', (e) => {
+                if (!e.target.closest('li')) {
+                    category.classList.toggle('expanded');
+                    loadDestinationData(category);
+                }
+            });
+        });
+
+        // 7. List item hover effects with AJAX data loading
+        const listItems = document.querySelectorAll('.destinations-list li');
+        listItems.forEach((item) => {
+            item.addEventListener('mouseenter', (e) => {
+                const destName = item.getAttribute('data-dest');
+                loadDestinationInfo(destName, item);
+                item.style.background = 'rgba(102, 126, 234, 0.05)';
+                item.style.paddingLeft = '35px';
+                item.style.borderRadius = '5px';
+                item.style.padding = '8px 35px';
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.style.background = 'transparent';
+                item.style.paddingLeft = '35px';
+                item.style.padding = '0px 35px 0px 25px';
+            });
+
+            // Double click to show info
+            item.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                const destName = item.getAttribute('data-dest');
+                showDestinationModal(destName);
+            });
+        });
+
+        // 8. AJAX function to load destination information
+        function loadDestinationInfo(destination, element) {
+            const destinationData = {
+                rome: { 
+                    temp: '12-20°C', 
+                    bestTime: 'April-June',
+                    avgCost: '$80-150/day',
+                    attractions: 'Colosseum, Vatican, Trevi Fountain'
+                },
+                athens: {
+                    temp: '10-27°C',
+                    bestTime: 'May-September',
+                    avgCost: '$60-120/day',
+                    attractions: 'Acropolis, Parthenon, Ancient Agora'
+                },
+                beijing: {
+                    temp: '-5-26°C',
+                    bestTime: 'September-October',
+                    avgCost: '$40-80/day',
+                    attractions: 'Great Wall, Forbidden City, Summer Palace'
+                },
+                cairo: {
+                    temp: '10-34°C',
+                    bestTime: 'October-April',
+                    avgCost: '$50-100/day',
+                    attractions: 'Pyramids, Egyptian Museum, Sphinx'
+                },
+                bali: {
+                    temp: '24-31°C',
+                    bestTime: 'April-October',
+                    avgCost: '$30-70/day',
+                    attractions: 'Temples, Rice Terraces, Beaches'
+                },
+                maldives: {
+                    temp: '26-31°C',
+                    bestTime: 'November-March',
+                    avgCost: '$150-400/day',
+                    attractions: 'Coral Reefs, Water Bungalows, Diving'
+                },
+                dubai: {
+                    temp: '14-41°C',
+                    bestTime: 'November-March',
+                    avgCost: '$100-250/day',
+                    attractions: 'Burj Khalifa, Palm Jumeirah, Gold Souk'
+                },
+                newyork: {
+                    temp: '-3-25°C',
+                    bestTime: 'September-November',
+                    avgCost: '$120-250/day',
+                    attractions: 'Central Park, Times Square, Statue of Liberty'
+                }
+            };
+
+            if (destinationData[destination]) {
+                const data = destinationData[destination];
+                removeExistingTooltip();
+                const tooltip = document.createElement('div');
+                tooltip.className = 'destination-tooltip';
+                tooltip.innerHTML = `
+                    <strong>${destination.toUpperCase()}</strong><br>
+                    🌡️ Temp: ${data.temp}<br>
+                    📅 Best: ${data.bestTime}<br>
+                    💰 Cost: ${data.avgCost}<br>
+                    ⭐ Highlights: ${data.attractions}
+                `;
+                tooltip.style.cssText = `
+                    position: fixed;
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    padding: 12px;
+                    border-radius: 8px;
+                    font-size: 0.85em;
+                    z-index: 10000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    pointer-events: none;
+                    animation: fadeIn 0.3s ease;
+                `;
+                document.body.appendChild(tooltip);
+
+                const updateTooltipPosition = (e) => {
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
+                };
+
+                document.addEventListener('mousemove', updateTooltipPosition);
+                element.addEventListener('mouseleave', () => {
+                    removeExistingTooltip();
+                    document.removeEventListener('mousemove', updateTooltipPosition);
+                });
+            }
+        }
+
+        function removeExistingTooltip() {
+            const existingTooltip = document.querySelector('.destination-tooltip');
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+        }
+
+        // 9. Modal for destination information
+        function showDestinationModal(destination) {
+            const destinationNames = {
+                rome: 'Rome, Italy',
+                athens: 'Athens, Greece',
+                beijing: 'Beijing, China',
+                cairo: 'Cairo, Egypt',
+                bali: 'Bali, Indonesia',
+                maldives: 'Maldives',
+                patagonia: 'Patagonia, Argentina',
+                costarica: 'Costa Rica',
+                newyork: 'New York, USA',
+                dubai: 'Dubai, UAE',
+                singapore: 'Singapore',
+                barcelona: 'Barcelona, Spain',
+                nepal: 'Nepal',
+                switzerland: 'Switzerland',
+                newzealand: 'New Zealand',
+                iceland: 'Iceland'
+            };
+
+            alert(`📍 Destination: ${destinationNames[destination]}\n\nDouble-click any destination to see more info!\n\nWould you like to book a trip to ${destinationNames[destination]}?`);
+        }
+
+        // 10. Load destination data function
+        function loadDestinationData(category) {
+            const categoryName = category.getAttribute('data-category');
+            const children = category.querySelectorAll('li');
+            children.forEach((child, index) => {
+                child.style.animation = `slideDown 0.5s ease-out ${index * 0.1}s`;
+            });
+        }
+
+        // 11. Content Section Hover Effects
+        document.querySelectorAll('.content-section').forEach((section, index) => {
+            section.style.animationDelay = `${index * 0.1}s`;
+            
+            section.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(10px)';
+                this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+            });
+
+            section.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+            });
+
+            section.addEventListener('click', function(e) {
+                const title = this.querySelector('h3').textContent;
+                console.log(`✅ Selected destination: ${title}`);
+                loadDestinationDetails(title);
+            });
+        });
+
+        // 12. Load destination details function
+        function loadDestinationDetails(destination) {
+            const details = {
+                'Paris, France': {
+                    visited: '7.9M annually',
+                    rating: '★★★★★',
+                    bestFor: 'Culture, Romance, Museums'
+                },
+                'Tokyo, Japan': {
+                    visited: '13.9M annually',
+                    rating: '★★★★★',
+                    bestFor: 'Technology, Food, Nightlife'
+                },
+                'Safari, Kenya': {
+                    visited: '1.5M annually',
+                    rating: '★★★★★',
+                    bestFor: 'Wildlife, Adventure, Photography'
+                },
+                'New York, USA': {
+                    visited: '65.1M annually',
+                    rating: '★★★★★',
+                    bestFor: 'Arts, Entertainment, Shopping'
+                }
+            };
+
+            if (details[destination]) {
+                alert(`📍 ${destination}\n\n👥 Annual Visitors: ${details[destination].visited}\n⭐ Rating: ${details[destination].rating}\n🎯 Best For: ${details[destination].bestFor}`);
+            }
+        }
+
+        // 13. Navigation Link Enhancement
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    console.log(`📖 Scrolling to: ${target.id}`);
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.3)';
+                    setTimeout(() => {
+                        target.style.boxShadow = '';
+                    }, 2000);
+                }
+            });
+        });
+
+        // 14. Map image hover effects
+        const mapImg = document.getElementById('worldMap');
+        if (mapImg) {
+            mapImg.addEventListener('mouseenter', function() {
+                this.style.filter = 'brightness(1.1) drop-shadow(0 8px 20px rgba(102, 126, 234, 0.4))';
+                console.log('🗺️ Map activated - hover over regions to explore!');
+            });
+
+            mapImg.addEventListener('mouseleave', function() {
+                this.style.filter = 'brightness(1)';
+            });
+        }
+
+        // 15. Area (hotspot) hover effects
+        document.querySelectorAll('area').forEach(area => {
+            area.addEventListener('mouseenter', function() {
+                document.body.style.cursor = 'pointer';
+                console.log(`🌍 Hovering over: ${this.alt}`);
+            });
+
+            area.addEventListener('mouseleave', function() {
+                document.body.style.cursor = 'default';
+            });
+        });
+
+        // 16. Page Load Animation
+        window.addEventListener('load', function() {
+            console.log('✅ Complete Travel Guide - Fully Loaded!');
+            console.log('💡 Tip: Hover over the map regions to learn more!');
+            console.log('💡 Tip: Click on destination cards to see details!');
+            console.log('💡 Tip: Double-click destinations in travel guide for modals!');
+            
+            document.querySelectorAll('section').forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease-out';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+
+        // 17. Add CSS animations dynamically
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            section {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .content-section {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            area {
+                transition: opacity 0.2s ease;
+            }
+
+            area:hover {
+                opacity: 0.8;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        console.log('🚀 Interactive Travel Guide - All Features Active!');
+    </script>
+</body>
+</html>
