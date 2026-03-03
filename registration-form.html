@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form - Input Validation</title>
+    
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, 20px);
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(102, 126, 234, 0.6) 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .form-group:nth-child(7) { animation-delay: 0.7s; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95em;
+        }
+
+        label span {
+            color: var(--error-color);
+            margin-left: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: var(--transition);
+            background-color: #f8f9fa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="text"]:valid,
+        input[type="email"]:valid,
+        input[type="password"]:valid,
+        input[type="tel"]:valid,
+        textarea:valid {
+            border-color: var(--success-color);
+        }
+
+        input.input-error,
+        textarea.input-error {
+            border-color: var(--error-color);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        input.input-error:focus,
+        textarea.input-error:focus {
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        input.input-success,
+        textarea.input-success {
+            border-color: var(--success-color);
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+
+        input.input-success:focus,
+        textarea.input-success:focus {
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+        .error-message,
+        .success-message {
+            font-size: 0.85em;
+            margin-top: 6px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 35px;
+            animation: slideIn 0.6s ease-out 0.8s both;
+        }
+
+        button {
+            flex: 1;
+            padding: 13px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-reset:hover {
+            background-color: #e0e0e0;
+            border-color: var(--text-dark);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .validation-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            display: none;
+        }
+
+        .validation-summary.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .validation-summary h3 {
+            color: var(--error-color);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .validation-summary ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .validation-summary li {
+            padding: 6px 0;
+            color: var(--text-light);
+            font-size: 0.95em;
+        }
+
+        .validation-summary li::before {
+            content: '✗ ';
+            color: var(--error-color);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .success-banner {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+            border: 2px solid var(--success-color);
+            border-radius: 8px;
+            color: var(--success-color);
+            display: none;
+            text-align: center;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .success-banner.show {
+            display: block;
+        }
+
+        .success-banner h3 {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+
+        .form-hint {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+            color: var(--text-light);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .form-hint h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .form-hint ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .form-hint li {
+            margin-bottom: 5px;
+        }
+
+        /* Field validation icon */
+        .field-status {
+            position: relative;
+        }
+
+        .field-status::after {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .field-status.valid::after {
+            content: '✓';
+            color: var(--success-color);
+            opacity: 1;
+        }
+
+        .field-status.invalid::after {
+            content: '✗';
+            color: var(--error-color);
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 25px;
+                margin-top: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📝 User Registration Form</h1>
+        <p>Please fill in all the required fields with accurate information</p>
+    </header>
+
+    <div class="container">
+        <div class="form-hint">
+            <h4>📋 Validation Requirements:</h4>
+            <ul>
+                <li><strong>First Name:</strong> Alphabets only, minimum 6 characters</li>
+                <li><strong>Last Name:</strong> Required field, cannot be empty</li>
+                <li><strong>Email:</strong> Valid email format (example@domain.com)</li>
+                <li><strong>Password:</strong> Minimum 6 characters</li>
+                <li><strong>Mobile Number:</strong> Exactly 10 digits, numbers only</li>
+                <li><strong>Address:</strong> Required field, cannot be empty</li>
+            </ul>
+        </div>
+
+        <form id="registrationForm" name="regForm">
+            <!-- First Name -->
+            <div class="form-group">
+                <label for="firstName">
+                    First Name <span>*</span>
+                </label>
+                <div class="field-status">
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName" 
+                        placeholder="Enter your first name"
+                        autocomplete="given-name"
+                    >
+                </div>
+                <div class="error-message" id="firstNameError"></div>
+                <div class="success-message" id="firstNameSuccess">✓ First name is valid</div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label for="lastName">
+                    Last Name <span>*</span>
+                </label>
+                <div class="field-status">
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName" 
+                        placeholder="Enter your last name"
+                        autocomplete="family-name"
+                    >
+                </div>
+                <div class="error-message" id="lastNameError"></div>
+                <div class="success-message" id="lastNameSuccess">✓ Last name is valid</div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">
+                    Email Address <span>*</span>
+                </label>
+                <div class="field-status">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="example@domain.com"
+                        autocomplete="email"
+                    >
+                </div>
+                <div class="error-message" id="emailError"></div>
+                <div class="success-message" id="emailSuccess">✓ Email is valid</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">
+                    Password <span>*</span>
+                </label>
+                <div class="field-status">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password (min 6 characters)"
+                        autocomplete="new-password"
+                    >
+                </div>
+                <div class="error-message" id="passwordError"></div>
+                <div class="success-message" id="passwordSuccess">✓ Password is valid</div>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="form-group">
+                <label for="mobile">
+                    Mobile Number <span>*</span>
+                </label>
+                <div class="field-status">
+                    <input 
+                        type="tel" 
+                        id="mobile" 
+                        name="mobile" 
+                        placeholder="Enter 10-digit mobile number"
+                        autocomplete="tel"
+                        maxlength="10"
+                    >
+                </div>
+                <div class="error-message" id="mobileError"></div>
+                <div class="success-message" id="mobileSuccess">✓ Mobile number is valid</div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address">
+                    Address <span>*</span>
+                </label>
+                <div class="field-status">
+                    <textarea 
+                        id="address" 
+                        name="address" 
+                        placeholder="Enter your complete address"
+                        autocomplete="street-address"
+                    ></textarea>
+                </div>
+                <div class="error-message" id="addressError"></div>
+                <div class="success-message" id="addressSuccess">✓ Address is valid</div>
+            </div>
+
+            <!-- Validation Summary -->
+            <div class="validation-summary" id="validationSummary">
+                <h3>⚠️ Please fix the following errors:</h3>
+                <ul id="errorList"></ul>
+            </div>
+
+            <!-- Success Banner -->
+            <div class="success-banner" id="successBanner">
+                <h3>✅ Form Submitted Successfully!</h3>
+                <p>Your registration has been completed. Thank you for registering with us.</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+                <button type="reset" class="btn-reset" id="resetBtn">Reset</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 User Registration System | Form Validation & Data Integrity</p>
+    </footer>
+
+    <script>
+        // ===== FORM VALIDATION SCRIPT =====
+
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const validationSummary = document.getElementById('validationSummary');
+        const errorList = document.getElementById('errorList');
+        const successBanner = document.getElementById('successBanner');
+
+        // Validation Rules Object
+        const validationRules = {
+            firstName: {
+                validate: (value) => {
+                    if (!value.trim()) return { valid: false, message: 'First name is required' };
+                    if (!/^[a-zA-Z\s]+$/.test(value)) return { valid: false, message: 'First name must contain only alphabets' };
+                    if (value.trim().length < 6) return { valid: false, message: 'First name must be at least 6 characters long' };
+                    return { valid: true, message: 'First name is valid' };
+                }
+            },
+            lastName: {
+                validate: (value) => {
+                    if (!value.trim()) return { valid: false, message: 'Last name is required' };
+                    if (!/^[a-zA-Z\s]+$/.test(value)) return { valid: false, message: 'Last name must contain only alphabets' };
+                    return { valid: true, message: 'Last name is valid' };
+                }
+            },
+            email: {
+                validate: (value) => {
+                    if (!value.trim()) return { valid: false, message: 'Email is required' };
+                    // Standard email regex pattern
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) return { valid: false, message: 'Please enter a valid email address (example@domain.com)' };
+                    return { valid: true, message: 'Email is valid' };
+                }
+            },
+            password: {
+                validate: (value) => {
+                    if (!value) return { valid: false, message: 'Password is required' };
+                    if (value.length < 6) return { valid: false, message: 'Password must be at least 6 characters long' };
+                    return { valid: true, message: 'Password is valid' };
+                }
+            },
+            mobile: {
+                validate: (value) => {
+                    if (!value) return { valid: false, message: 'Mobile number is required' };
+                    if (!/^\d{10}$/.test(value)) return { valid: false, message: 'Mobile number must be exactly 10 digits with no special characters' };
+                    return { valid: true, message: 'Mobile number is valid' };
+                }
+            },
+            address: {
+                validate: (value) => {
+                    if (!value.trim()) return { valid: false, message: 'Address is required' };
+                    if (value.trim().length < 10) return { valid: false, message: 'Address must be at least 10 characters' };
+                    return { valid: true, message: 'Address is valid' };
+                }
+            }
+        };
+
+        // Function to validate a single field
+        function validateField(fieldName) {
+            const field = document.getElementById(fieldName);
+            const value = field.value;
+            const validation = validationRules[fieldName].validate(value);
+            const errorElement = document.getElementById(fieldName + 'Error');
+            const successElement = document.getElementById(fieldName + 'Success');
+            const fieldStatus = field.closest('.field-status');
+
+            if (validation.valid) {
+                // Field is valid
+                field.classList.remove('input-error');
+                field.classList.add('input-success');
+                fieldStatus.classList.remove('invalid');
+                fieldStatus.classList.add('valid');
+                errorElement.classList.remove('show');
+                successElement.classList.add('show');
+                console.log(`✅ ${fieldName}: ${validation.message}`);
+                return true;
+            } else {
+                // Field is invalid
+                field.classList.remove('input-success');
+                field.classList.add('input-error');
+                fieldStatus.classList.remove('valid');
+                fieldStatus.classList.add('invalid');
+                errorElement.textContent = '✗ ' + validation.message;
+                errorElement.classList.add('show');
+                successElement.classList.remove('show');
+                console.log(`❌ ${fieldName}: ${validation.message}`);
+                return false;
+            }
+        }
+
+        // Function to validate all fields
+        function validateAllFields() {
+            const fieldNames = ['firstName', 'lastName', 'email', 'password', 'mobile', 'address'];
+            const results = [];
+            const errors = [];
+
+            fieldNames.forEach(fieldName => {
+                const isValid = validateField(fieldName);
+                results.push(isValid);
+                
+                if (!isValid) {
+                    const field = document.getElementById(fieldName);
+                    const validation = validationRules[fieldName].validate(field.value);
+                    errors.push(validation.message);
+                }
+            });
+
+            return { allValid: results.every(r => r === true), errors };
+        }
+
+        // Function to display validation summary
+        function displayValidationSummary(errors) {
+            if (errors.length > 0) {
+                validationSummary.classList.add('show');
+                errorList.innerHTML = errors
+                    .map(error => `<li>${error}</li>`)
+                    .join('');
+                console.log('⚠️ Validation errors found:', errors);
+            } else {
+                validationSummary.classList.remove('show');
+            }
+        }
+
+        // Function to reset form styling
+        function resetFormStyling() {
+            const fieldNames = ['firstName', 'lastName', 'email', 'password', 'mobile', 'address'];
+            fieldNames.forEach(fieldName => {
+                const field = document.getElementById(fieldName);
+                const errorElement = document.getElementById(fieldName + 'Error');
+                const successElement = document.getElementById(fieldName + 'Success');
+                const fieldStatus = field.closest('.field-status');
+
+                field.classList.remove('input-error', 'input-success');
+                fieldStatus.classList.remove('valid', 'invalid');
+                errorElement.classList.remove('show');
+                successElement.classList.remove('show');
+            });
+            validationSummary.classList.remove('show');
+            successBanner.classList.remove('show');
+        }
+
+        // Add real-time validation listeners
+        document.getElementById('firstName').addEventListener('blur', () => validateField('firstName'));
+        document.getElementById('firstName').addEventListener('input', () => {
+            if (document.getElementById('firstName').classList.contains('input-error')) {
+                validateField('firstName');
+            }
+        });
+
+        document.getElementById('lastName').addEventListener('blur', () => validateField('lastName'));
+        document.getElementById('lastName').addEventListener('input', () => {
+            if (document.getElementById('lastName').classList.contains('input-error')) {
+                validateField('lastName');
+            }
+        });
+
+        document.getElementById('email').addEventListener('blur', () => validateField('email'));
+        document.getElementById('email').addEventListener('input', () => {
+            if (document.getElementById('email').classList.contains('input-error')) {
+                validateField('email');
+            }
+        });
+
+        document.getElementById('password').addEventListener('blur', () => validateField('password'));
+        document.getElementById('password').addEventListener('input', () => {
+            if (document.getElementById('password').classList.contains('input-error')) {
+                validateField('password');
+            }
+        });
+
+        document.getElementById('mobile').addEventListener('blur', () => validateField('mobile'));
+        document.getElementById('mobile').addEventListener('input', () => {
+            // Only allow digits
+            const mobile = document.getElementById('mobile');
+            mobile.value = mobile.value.replace(/[^0-9]/g, '');
+            if (mobile.classList.contains('input-error')) {
+                validateField('mobile');
+            }
+        });
+
+        document.getElementById('address').addEventListener('blur', () => validateField('address'));
+        document.getElementById('address').addEventListener('input', () => {
+            if (document.getElementById('address').classList.contains('input-error')) {
+                validateField('address');
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('📋 Form submission initiated...');
+
+            const { allValid, errors } = validateAllFields();
+
+            if (allValid) {
+                // All fields are valid
+                console.log('✅ All fields are valid! Form submitted successfully.');
+                validationSummary.classList.remove('show');
+                successBanner.classList.add('show');
+
+                // Collect form data
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    mobile: document.getElementById('mobile').value,
+                    address: document.getElementById('address').value,
+                    timestamp: new Date().toLocaleString()
+                };
+
+                console.log('📊 Form Data Submitted:', formData);
+                alert(`✅ Registration Successful!\n\nName: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nMobile: ${formData.mobile}\n\nThank you for registering!`);
+
+                // Optional: Reset form after successful submission
+                setTimeout(() => {
+                    form.reset();
+                    resetFormStyling();
+                    successBanner.classList.remove('show');
+                }, 2000);
+            } else {
+                // Show validation errors
+                console.log('❌ Form validation failed. Please correct the errors.');
+                displayValidationSummary(errors);
+                alert('❌ Please fix the validation errors before submitting.');
+            }
+        });
+
+        // Reset button
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            resetFormStyling();
+            console.log('🔄 Form has been reset.');
+        });
+
+        // Page load
+        window.addEventListener('load', function() {
+            console.log('🚀 Registration Form loaded successfully!');
+            console.log('💡 Tip: Fill in all fields and watch real-time validation');
+        });
+    </script>
+</body>
+</html>
