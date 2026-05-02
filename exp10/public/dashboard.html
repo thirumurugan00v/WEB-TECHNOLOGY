@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your personal dashboard — view all your complaints and their current status.">
+  <title>Dashboard — ComplaintDesk</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-brand">
+        <span class="brand-icon">📋</span>
+        ComplaintDesk
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/dashboard.html" class="active">Dashboard</a>
+        <a href="/raise-complaint.html">Raise Complaint</a>
+        <a href="/about.html">About</a>
+        <a href="#" class="btn-nav" id="logoutBtn">Logout</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Dashboard -->
+  <section class="dashboard-page">
+    <div class="container">
+      <div class="dashboard-header">
+        <div>
+          <h1>My Dashboard</h1>
+          <p class="welcome-text" id="welcomeText">Welcome back!</p>
+        </div>
+        <a href="/raise-complaint.html" class="btn btn-primary">+ Raise New Complaint</a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe;color:#2563eb;">📋</div>
+          <div class="stat-info">
+            <h3 id="totalCount">0</h3>
+            <p>Total Complaints</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7;color:#d97706;">⏳</div>
+          <div class="stat-info">
+            <h3 id="pendingCount">0</h3>
+            <p>Pending</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dbeafe;color:#2563eb;">🔄</div>
+          <div class="stat-info">
+            <h3 id="progressCount">0</h3>
+            <p>In Progress</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#d1fae5;color:#059669;">✅</div>
+          <div class="stat-info">
+            <h3 id="resolvedCount">0</h3>
+            <p>Resolved</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Complaints List -->
+      <div class="complaints-section">
+        <h2>Your Complaints</h2>
+        <div class="complaints-grid" id="complaintsGrid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

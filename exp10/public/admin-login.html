@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Admin login portal for ComplaintDesk administrators.">
+  <title>Admin Login — ComplaintDesk</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-brand">
+        <span class="brand-icon">📋</span>
+        ComplaintDesk
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/login.html" class="btn-nav-outline">User Login</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Admin Login Form -->
+  <section class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-icon" style="background:linear-gradient(135deg, #7c3aed, #6d28d9);">🛡️</div>
+        <h2>Admin Portal</h2>
+        <p>Login with your administrator credentials</p>
+      </div>
+
+      <div class="alert" id="alertBox"></div>
+
+      <form id="adminLoginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Admin Email</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="admin@complaint.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);" id="adminLoginBtn">
+          Admin Login
+        </button>
+      </form>
+
+      <p style="text-align:center;margin-top:24px;font-size:0.82rem;color:var(--gray-400);">
+        <a href="/login.html" style="color:var(--gray-400);">← Back to User Login</a>
+      </p>
+    </div>
+  </section>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/admin-login.js"></script>
+</body>
+</html>

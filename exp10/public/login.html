@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to ComplaintDesk to manage your complaints.">
+  <title>Login — ComplaintDesk</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-brand">
+        <span class="brand-icon">📋</span>
+        ComplaintDesk
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/login.html" class="btn-nav-outline active">Login</a>
+        <a href="/register.html" class="btn-nav">Register</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Login Form -->
+  <section class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-icon">🔐</div>
+        <h2>Welcome Back</h2>
+        <p>Login to your ComplaintDesk account</p>
+      </div>
+
+      <div class="alert" id="alertBox"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;" id="loginBtn">
+          Login
+        </button>
+      </form>
+
+      <p style="text-align:center;margin-top:24px;font-size:0.9rem;color:var(--gray-500);">
+        Don't have an account? <a href="/register.html" style="color:var(--primary-600);font-weight:600;">Register here</a>
+      </p>
+      <p style="text-align:center;margin-top:8px;font-size:0.82rem;color:var(--gray-400);">
+        <a href="/admin-login.html" style="color:var(--gray-400);">Admin Login →</a>
+      </p>
+    </div>
+  </section>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

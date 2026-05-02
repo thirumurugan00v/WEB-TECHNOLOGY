@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Raise a new complaint — select category, describe the issue, and submit.">
+  <title>Raise Complaint — ComplaintDesk</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-brand">
+        <span class="brand-icon">📋</span>
+        ComplaintDesk
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/raise-complaint.html" class="active">Raise Complaint</a>
+        <a href="/about.html">About</a>
+        <a href="#" class="btn-nav" id="logoutBtn">Logout</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Raise Complaint Form -->
+  <section class="raise-page">
+    <div class="raise-card">
+      <div class="raise-header">
+        <h2>📝 Raise a New Complaint</h2>
+        <p>Fill in the details below and we'll forward your complaint to the concerned department.</p>
+      </div>
+
+      <div class="alert" id="alertBox"></div>
+
+      <form id="complaintForm" novalidate>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" name="category" class="form-control" required>
+            <option value="">— Select Category —</option>
+            <option value="Infrastructure">🏗️ Infrastructure</option>
+            <option value="Academic">🎓 Academic</option>
+            <option value="Hostel">🏠 Hostel</option>
+            <option value="Transport">🚌 Transport</option>
+            <option value="Other">📌 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" class="form-control" placeholder="Brief subject of your complaint" required maxlength="200">
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" class="form-control" placeholder="Describe your issue in detail..." required maxlength="2000" rows="6"></textarea>
+          <small style="color:var(--gray-400);font-size:0.78rem;"><span id="charCount">0</span> / 2000 characters</small>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button type="submit" class="btn btn-primary" style="flex:1;" id="submitBtn">
+            Submit Complaint
+          </button>
+          <a href="/dashboard.html" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script src="/js/navbar.js"></script>
+  <script src="/js/raise-complaint.js"></script>
+</body>
+</html>
